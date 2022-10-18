@@ -1,11 +1,45 @@
+import axios from 'axios'
 import React, {useState} from 'react'
+import { iProduct } from '../models'
+import { ErrorMessage } from './ErrorMessage'
 
-export function CreateProduct(){
+const productData: iProduct = {
+    title: 'test product',
+    price: 13.5,
+    description: 'lorem ipsum set',
+    image: 'https://i.pravatar.cc',
+    category: 'electronic',
+    rating: {
+        rate: 42,
+        count: 10
+    }
+}
+
+
+interface CreateProductProps{
+    onCreate:(product: iProduct) => void
+}
+
+
+export function CreateProduct({onCreate}:CreateProductProps){
 
     const[value, setValue] = useState('')
+    const[error, setError] = useState('')
 
-    const submitHandler = (event: React.FormEvent) => {
+    const submitHandler = async (event: React.FormEvent) => {
         event.preventDefault()
+
+        setError('')
+
+        if(value.trim().length === 0 ){
+            setError('Please enter valid title')
+            return
+        }
+        productData.title = value
+
+        const response = await axios.post<iProduct>('https://fakestoreapi.com/products', productData)
+
+        onCreate(response.data)
     }
 
 
@@ -18,6 +52,8 @@ export function CreateProduct(){
                 value = {value}
                 onChange = {event => setValue(event.target.value)}
             /> 
+
+                {error && <ErrorMessage error = {error} />}
 
             <button 
                 type='submit'

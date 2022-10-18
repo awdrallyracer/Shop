@@ -1,35 +1,15 @@
-import {Product} from './components/Product'
-import {useProducts} from './hooks/products'
-import {Loader} from './components/Loader'
-import {ErrorMessage} from './components/ErrorMessage'
-import { Modal } from './components/Modal'
-import { CreateProduct } from './components/CreateProduct'
-import { Header } from './components/Header'
-
-
+import {Route, Routes} from 'react-router-dom'
+import { AboutPage } from './pages/AboutPage';
+import {ProductPage} from './pages/ProductsPage'
 
 function App() {
-  
+  return(
+      <Routes>
+         <Route path = "/" element = { <ProductPage />} />
+         <Route path = "/about" element = { <AboutPage />} /> 
+      </Routes>
+  )
 
-  const {error, loading, products} = useProducts()
-  
-  
-  return( 
-  <div className = "container mx-auto max-w-2xl pt-5">
-    <Header title="SimpleShop" />
-
-    {loading && <Loader />}
-    {error && <ErrorMessage error = {error} />}
-
-    {products.map(product => <Product product = {product}  key = {product.id} />)}
-
-    <Modal title="Create new product"> 
-        <CreateProduct />
-    </Modal>
-
-</div>
-
-)
 }
 
 export default App;
